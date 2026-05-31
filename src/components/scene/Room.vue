@@ -3,7 +3,7 @@ import Floor from "./Floor.vue";
 </script>
 
 <template>
-    <TresPerspectiveCamera :position="[10, 5, 5]" :look-at="[0, 0, 0]" />
+    <TresPerspectiveCamera :position="[5, 0, 5]" :look-at="[0, 0, 0]" />
     <TresAmbientLight :intensity="0.5" color="white" />
     <TresGroup>
         <Floor />
