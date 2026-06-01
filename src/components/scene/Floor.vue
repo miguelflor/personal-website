@@ -3,10 +3,11 @@ import { ref, watch, markRaw } from "vue";
 import { useGLTF } from "@tresjs/cientos";
 import { Box3, Vector3 } from "three";
 
+const props = defineProps<{ width: number }>();
+
 const { state: model } = useGLTF("/models/room/planks.glb");
 const plankScale = ref(1);
 const plankWidth = 0.5;
-const floorScale = 5;
 const scenes = ref<any[]>([]);
 const positions = ref<[number, number, number][]>([]);
 
@@ -19,8 +20,8 @@ watch(model, (loaded) => {
   box.getSize(plankSize);
   plankScale.value = plankWidth / plankSize.x;
 
-  for (let i = -floorScale / 2; i < floorScale / 2; i += plankWidth) {
-    for (let j = -floorScale / 2; j < floorScale / 2; j += plankWidth) {
+  for (let i = -props.width / 2; i < props.width / 2; i += plankWidth) {
+    for (let j = -props.width / 2; j < props.width / 2; j += plankWidth) {
       positions.value.push([i, -plankSize.y * plankScale.value, j]);
       scenes.value.push(markRaw(loaded.scene.clone()));
     }
