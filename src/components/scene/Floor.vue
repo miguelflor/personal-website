@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, markRaw } from "vue";
+import { markRaw, ref, watch } from "vue";
 import { useGLTF } from "@tresjs/cientos";
 import { Box3, Vector3 } from "three";
 
@@ -12,7 +12,9 @@ const scenes = ref<any[]>([]);
 const positions = ref<[number, number, number][]>([]);
 
 watch(model, (loaded) => {
-  if (!loaded) return;
+  if (!loaded) {
+    return;
+  }
 
   const box = new Box3();
   box.expandByObject(loaded.scene);
@@ -22,7 +24,7 @@ watch(model, (loaded) => {
 
   for (let i = -props.width / 2; i < props.width / 2; i += plankWidth) {
     for (let j = -props.width / 2; j < props.width / 2; j += plankWidth) {
-      positions.value.push([i, -plankSize.y * plankScale.value, j]);
+      positions.value.push([i + plankWidth / 2, -plankSize.y * plankScale.value, j + plankWidth / 2]);
       scenes.value.push(markRaw(loaded.scene.clone()));
     }
   }
