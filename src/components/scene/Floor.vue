@@ -24,8 +24,15 @@ watch(model, (loaded) => {
 
   for (let i = -props.width / 2; i < props.width / 2; i += plankWidth) {
     for (let j = -props.width / 2; j < props.width / 2; j += plankWidth) {
+      const clone = loaded.scene.clone();
+      clone.traverse((child: any) => {
+        if (child.isMesh) {
+          child.receiveShadow = true;
+          child.castShadow = true;
+        }
+      });
       positions.value.push([i + plankWidth / 2, -plankSize.y * plankScale.value, j + plankWidth / 2]);
-      scenes.value.push(markRaw(loaded.scene.clone()));
+      scenes.value.push(markRaw(clone));
     }
   }
 });

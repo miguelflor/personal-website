@@ -23,6 +23,8 @@ const position = (() => {
 
 <template>
   <TresMesh
+    receive-shadow
+    cast-shadow
     :rotation="[0, rotates ? Math.PI / 2 : 0, 0]"
     :position="position as [number, number, number]"
   >
