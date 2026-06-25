@@ -19,7 +19,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <TresPerspectiveCamera :position="[0, 2, -5]" :look-at="[0, 0, 0]" />
+  <TresPerspectiveCamera :position="[0, 2, -5]" :look-at="[0, 1, 0]" />
   <TresAmbientLight :intensity="0.5" color="white" />
   <TresGroup>
     <Floor :width="floorSize" />
