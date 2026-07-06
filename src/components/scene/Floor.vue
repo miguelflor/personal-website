@@ -2,8 +2,7 @@
 import { markRaw, ref, watch } from "vue";
 import { useGLTF } from "@tresjs/cientos";
 import { Box3, Vector3 } from "three";
-
-const props = defineProps<{ width: number }>();
+import { FLOOR_SIZE } from "./room";
 
 const { state: model } = useGLTF("/models/room/planks.glb");
 const plankScale = ref(1);
@@ -22,8 +21,8 @@ watch(model, (loaded) => {
   box.getSize(plankSize);
   plankScale.value = plankWidth / plankSize.x;
 
-  for (let i = -props.width / 2; i < props.width / 2; i += plankWidth) {
-    for (let j = -props.width / 2; j < props.width / 2; j += plankWidth) {
+  for (let i = -FLOOR_SIZE / 2; i < FLOOR_SIZE / 2; i += plankWidth) {
+    for (let j = -FLOOR_SIZE / 2; j < FLOOR_SIZE / 2; j += plankWidth) {
       const clone = loaded.scene.clone();
       clone.traverse((child: any) => {
         if (child.isMesh) {

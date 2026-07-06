@@ -2,25 +2,29 @@
 import { useTextures } from "@tresjs/cientos";
 import { RepeatWrapping } from "three";
 import { Side } from "../../types";
-import { WALL_SAFE_OFFSET, WALL_THICKNESS, wallInnerOffset } from "./room";
+import {
+  FLOOR_SIZE,
+  WALL_HEIGHT,
+  WALL_INNER_OFFSET,
+  WALL_SAFE_OFFSET,
+  WALL_THICKNESS,
+} from "./room";
 
-const props = defineProps<{ side: Side; floorSize: number }>();
-const safeOffset = WALL_SAFE_OFFSET;
-const width = WALL_THICKNESS;
-const hight = 2 + safeOffset;
-const wallOffset = wallInnerOffset(props.floorSize) + width / 2;
+const props = defineProps<{ side: Side }>();
+const height = WALL_HEIGHT + WALL_SAFE_OFFSET;
+const wallOffset = WALL_INNER_OFFSET + WALL_THICKNESS / 2;
 const rotates = props.side === Side.Right || props.side === Side.Left;
 
 const position = (() => {
   switch (props.side) {
     case Side.Back:
-      return [0, hight / 2, -wallOffset];
+      return [0, height / 2, -wallOffset];
     case Side.Right:
-      return [wallOffset, hight / 2, 0];
+      return [wallOffset, height / 2, 0];
     case Side.Left:
-      return [-wallOffset, hight / 2, 0];
+      return [-wallOffset, height / 2, 0];
     case Side.Front:
-      return [0, hight / 2, wallOffset];
+      return [0, height / 2, wallOffset];
   }
 })();
 
@@ -45,7 +49,7 @@ function withRepeat(texture: any) {
     :rotation="[0, rotates ? Math.PI / 2 : 0, 0]"
     :position="position as [number, number, number]"
   >
-    <TresBoxGeometry :args="[floorSize + safeOffset, hight, width]" />
+    <TresBoxGeometry :args="[FLOOR_SIZE + WALL_SAFE_OFFSET, height, WALL_THICKNESS]" />
     <TresMeshStandardMaterial
       v-if="textures?.length"
       :map="withRepeat(textures[0])"
