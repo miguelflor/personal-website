@@ -2,12 +2,13 @@
 import { useTextures } from "@tresjs/cientos";
 import { RepeatWrapping } from "three";
 import { Side } from "../../types";
+import { WALL_SAFE_OFFSET, WALL_THICKNESS, wallInnerOffset } from "./room";
 
 const props = defineProps<{ side: Side; floorSize: number }>();
-const safeOffset = 0.03;
-const width = 0.05;
+const safeOffset = WALL_SAFE_OFFSET;
+const width = WALL_THICKNESS;
 const hight = 2 + safeOffset;
-const wallOffset = props.floorSize / 2 + width / 2 - safeOffset;
+const wallOffset = wallInnerOffset(props.floorSize) + width / 2;
 const rotates = props.side === Side.Right || props.side === Side.Left;
 
 const position = (() => {

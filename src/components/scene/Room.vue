@@ -3,6 +3,7 @@ import { onMounted, ref } from "vue";
 import type { SpotLight } from "three";
 import Floor from "./Floor.vue";
 import SideWall from "./SideWall.vue";
+import Desk from "./Desk.vue";
 import { Side } from "../../types";
 
 const floorSize = 5;
@@ -20,13 +21,14 @@ onMounted(() => {
 
 <template>
   <TresPerspectiveCamera :position="[0, 2, -5]" :look-at="[0, 1, 0]" />
-  <TresAmbientLight :intensity="0.5" color="white" />
   <TresGroup>
     <Floor :width="floorSize" />
     <SideWall :floorSize="floorSize" :side="Side.Front" />
     <SideWall :floorSize="floorSize" :side="Side.Left" />
     <SideWall :floorSize="floorSize" :side="Side.Right" />
+    <Desk :height="0.5" :floorSize="floorSize" />
   </TresGroup>
+  <TresAmbientLight :intensity="0.3" />
   <TresAxesHelper />
   <TresSpotLight
     ref="light"
