@@ -4,22 +4,35 @@ import { useGLTF } from "@tresjs/cientos";
 import { Box3, Vector3 } from "three";
 import type { Object3D } from "three";
 import { v3 } from "@/utils/math";
+import { ZAnchor } from "@/types";
 
 // Loads a GLTF, normalizes its shadows/materials, scales it to the requested
-// height, and places it so its back-bottom-center sits at local (0, 0, 0).
-// Callers position it in a parent group.
+// height, and places it so the chosen anchor point sits at local (0, 0, 0).
+// x is always centered; y always anchors to the bottom; z is configurable.
 const props = withDefaults(
   defineProps<{
     url: string;
     height: number;
     position?: Vector3;
+    zAnchor?: ZAnchor;
     // Called for every child in the loaded scene, after the default mesh
     // normalization. Use it to tweak specific named meshes (e.g. make a bulb
     // emissive, attach a light).
     onChild?: (child: Object3D) => void;
   }>(),
-  { position: () => v3() },
+  { position: () => v3(), zAnchor: ZAnchor.Center },
 );
+
+function zOffset(box: Box3, anchor: ZAnchor): number {
+  switch (anchor) {
+    case ZAnchor.Back:
+      return -box.max.z;
+    case ZAnchor.Front:
+      return -box.min.z;
+    case ZAnchor.Center:
+      return -(box.min.z + box.max.z) / 2;
+  }
+}
 
 const emit = defineEmits<{
   (e: "sized", size: Vector3): void;
@@ -60,7 +73,7 @@ watch(
     finalPosition.value = v3(
       -center.x * scale.value + props.position.x,
       -box.min.y * scale.value + props.position.y,
-      -box.max.z * scale.value + props.position.z,
+      zOffset(box, props.zAnchor) * scale.value + props.position.z,
     );
     scene.value = markRaw(loaded.scene);
     emit("sized", size.multiplyScalar(scale.value));

@@ -4,6 +4,7 @@ import type { Vector3 } from "three";
 import PlacedModel from "./PlacedModel.vue";
 import { DESK_HEIGHT, WALL_INNER_OFFSET } from "./room";
 import { v3 } from "@/utils/math";
+import { ZAnchor } from "@/types";
 
 
 const BULB_COLOR = "#ffd9a3";
@@ -42,6 +43,7 @@ watch(deskSize, (loaded) => {
     <PlacedModel
       url="/models/room/desk.glb"
       :height="DESK_HEIGHT"
+      :z-anchor="ZAnchor.Back"
       @sized="onDeskSized"
     />
     <TresGroup v-if="deskSize" :position="DESK_TOP">
