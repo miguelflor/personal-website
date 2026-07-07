@@ -3,12 +3,22 @@ import { markRaw, ref, watch } from "vue";
 import { useGLTF } from "@tresjs/cientos";
 import { Box3, Vector3 } from "three";
 
-const props = defineProps<{ height: number }>();
+// Loads a GLTF, normalizes its shadows/materials, scales it to the requested
+// height, and places it so its back-bottom-center sits at local (0, 0, 0).
+// Callers position it in a parent group.
+const props = withDefaults(
+  defineProps<{
+    url: string;
+    height: number;
+    position?: [number, number, number];
+  }>(),
+  { position: () => [0, 0, 0] },
+);
 
-const { state: model } = useGLTF("/models/room/desk.glb");
+const { state: model } = useGLTF(props.url);
 const scene = ref<any>();
-const deskScale = ref(1);
-const position = ref<[number, number, number]>([0, 0, 0]);
+const scale = ref(1);
+const finalPosition = ref<[number, number, number]>([0, 0, 0]);
 
 watch(
   model,
@@ -28,20 +38,18 @@ watch(
       }
     });
 
-    // Orient the desk to face into the room, then measure its bounds in that
+    // Orient the model to face into the room, then measure its bounds in that
     // final orientation so the extents map directly to world axes.
     loaded.scene.rotateY(Math.PI);
     const box = new Box3().expandByObject(loaded.scene);
-    const deskSize = box.getSize(new Vector3());
+    const size = box.getSize(new Vector3());
     const center = box.getCenter(new Vector3());
-    deskScale.value = props.height / deskSize.y;
+    scale.value = props.height / size.y;
 
-    // Center in X, rest on the floor in Y, and place the desk's rear edge at
-    // local z = 0 (the parent group aligns that with the front wall).
-    position.value = [
-      -center.x * deskScale.value,
-      -box.min.y * deskScale.value,
-      -box.max.z * deskScale.value,
+    finalPosition.value = [
+      -center.x * scale.value + props.position[0],
+      -box.min.y * scale.value + props.position[1],
+      -box.max.z * scale.value + props.position[2],
     ];
     scene.value = markRaw(loaded.scene);
   },
@@ -53,7 +61,7 @@ watch(
   <primitive
     v-if="scene"
     :object="scene"
-    :position="position"
-    :scale="deskScale"
+    :position="finalPosition"
+    :scale="scale"
   />
 </template>
