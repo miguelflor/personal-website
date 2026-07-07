@@ -12,16 +12,17 @@
     "lint:fix": "eslint  --fix"
   },
   "dependencies": {
+    "@tresjs/cientos": "latest",
     "@tresjs/core": "latest",
+    "@tresjs/leches": "latest",
+    "@tresjs/post-processing": "latest",
     "three": "latest",
     "three-stdlib": "latest",
-    "vue": "latest",
-    "@tresjs/cientos": "latest",
-    "@tresjs/post-processing": "latest",
-    "@tresjs/leches": "latest"
+    "vue": "latest"
   },
   "devDependencies": {
     "@tresjs/eslint-config": "^1.1.0",
+    "@types/node": "^26.1.0",
     "@types/three": "latest",
     "@vitejs/plugin-vue": "latest",
     "eslint": "^9.16.0",
