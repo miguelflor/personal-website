@@ -5,6 +5,7 @@ import Floor from "./Floor.vue";
 import SideWall from "./SideWall.vue";
 import { Side } from "../../types";
 import DeskScene from "./DeskScene.vue";
+import { OrbitControls } from "@tresjs/cientos";
 import { WALL_INNER_OFFSET } from "./room";
 
 const light = ref<SpotLight>();
@@ -24,6 +25,8 @@ onMounted(() => {
     :position="[0, 1, -1]"
     :look-at="[0, 0.5, WALL_INNER_OFFSET]"
   />
+  <!-- TEMP: dev-only camera controls. Remove once positioning is final. -->
+  <OrbitControls :target="[0, 0.5, WALL_INNER_OFFSET]" />
   <TresGroup>
     <Floor />
     <SideWall :side="Side.Front" />

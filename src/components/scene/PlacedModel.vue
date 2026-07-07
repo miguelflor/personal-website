@@ -2,6 +2,7 @@
 import { markRaw, ref, watch } from "vue";
 import { useGLTF } from "@tresjs/cientos";
 import { Box3, Vector3 } from "three";
+import type { Object3D } from "three";
 
 // Loads a GLTF, normalizes its shadows/materials, scales it to the requested
 // height, and places it so its back-bottom-center sits at local (0, 0, 0).
@@ -11,6 +12,10 @@ const props = withDefaults(
     url: string;
     height: number;
     position?: [number, number, number];
+    // Called for every child in the loaded scene, after the default mesh
+    // normalization. Use it to tweak specific named meshes (e.g. make a bulb
+    // emissive, attach a light).
+    onChild?: (child: Object3D) => void;
   }>(),
   { position: () => [0, 0, 0] },
 );
@@ -36,6 +41,7 @@ watch(
           child.material.needsUpdate = true;
         }
       }
+      props.onChild?.(child);
     });
 
     // Orient the model to face into the room, then measure its bounds in that
