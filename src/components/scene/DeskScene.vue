@@ -31,7 +31,7 @@ watch(deskSize, (loaded) => {
     return;
   }
 
-  lightDesk = v3(0, 0, -loaded.z/2);
+  lightDesk = v3(-loaded.x/2.5, 0, -loaded.z/3);
 });
 </script>
 
@@ -47,7 +47,7 @@ watch(deskSize, (loaded) => {
       @sized="onDeskSized"
     />
     <TresGroup v-if="deskSize" :position="DESK_TOP">
-    <TresGroup :position="lightDesk">
+    <TresGroup :position="lightDesk" :rotation="[0,-Math.PI/3,0]">
       <PlacedModel
         url="/models/room/light_desk.glb"
         :height="DESK_HEIGHT / 2"
