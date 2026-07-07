@@ -6,20 +6,27 @@ import { DESK_HEIGHT, WALL_INNER_OFFSET } from "./room";
 import { v3 } from "@/utils/math";
 import { ZAnchor } from "@/types";
 
-
-const BULB_COLOR = "#ffd9a3";
-// Magic numbers, very difficult not to
-const BULB_POSITION = v3(0, 0.19, -0.2);
-
-const GROUP_POSITION = v3(0, 0, WALL_INNER_OFFSET);
-const DESK_TOP = v3(0, DESK_HEIGHT, 0);
-
 const emit = defineEmits<{
   (e: "sized", size: Vector3): void;
 }>();
 
+const BULB_COLOR = "#ffd9a3";
+
+const groupPosition = v3(0, 0, WALL_INNER_OFFSET);
+// Magic numbers, very difficult not to
+const bulbPosition = v3(0, 0.19, -0.2);
+
+const monitorRotation: [number, number, number] = [0, Math.PI / 8, 0];
+const keyboardRotation: [number, number, number] = [0, Math.PI / 15, 0];
+const lampRotation: [number, number, number] = [0, -Math.PI / 3, 0];
+const mouseRotation: [number, number, number] = [0, Math.PI + Math.PI / 9, 0];
+
 const deskSize = ref<Vector3>();
-var lightDesk = v3(0,0,0);
+let deskTop = v3();
+let monitorPosition = v3();
+let lightDesk = v3();
+let keyboardPosition = v3();
+const mousePosition = v3();
 
 function onDeskSized(size: Vector3) {
   deskSize.value = size;
@@ -31,7 +38,11 @@ watch(deskSize, (loaded) => {
     return;
   }
 
-  lightDesk = v3(-loaded.x/2.5, 0, -loaded.z/3);
+  deskTop = v3(0, DESK_HEIGHT, -loaded.z * 0.5);
+  monitorPosition = v3(loaded.x * 0.25, 0, loaded.z * 0.17);
+  lightDesk = v3(-loaded.x * 0.4, 0, loaded.z * 0.25);
+  keyboardPosition = v3(loaded.x * 0.17, 0, -loaded.z * 0.33);
+  mousePosition.addVectors(keyboardPosition, v3(-loaded.x * 0.16, 0, 0));
 });
 </script>
 
@@ -39,29 +50,48 @@ watch(deskSize, (loaded) => {
   <!--
     Group origin sits on the front wall's inner face (local z = 0)
   -->
-  <TresGroup :position="GROUP_POSITION">
+  <TresGroup :position="groupPosition">
     <PlacedModel
       url="/models/room/desk.glb"
       :height="DESK_HEIGHT"
       :z-anchor="ZAnchor.Back"
       @sized="onDeskSized"
     />
-    <TresGroup v-if="deskSize" :position="DESK_TOP">
-    <TresGroup :position="lightDesk" :rotation="[0,-Math.PI/3,0]">
-      <PlacedModel
-        url="/models/room/light_desk.glb"
-        :height="DESK_HEIGHT / 2"
-      />
-      <TresMesh :position="BULB_POSITION">
-        <TresPointLight
-          :color="BULB_COLOR"
-          :intensity="1"
-          :distance="0"
-          :decay="1"
-          cast-shadow
+    <TresGroup v-if="deskSize" :position="deskTop">
+      <!-- Monitor -->
+      <TresGroup :position="monitorPosition" :rotation="monitorRotation">
+        <PlacedModel
+          url="/models/room/monitor.glb"
+          :height="DESK_HEIGHT / 1.7"
         />
-      </TresMesh>
-    </TresGroup>
+      </TresGroup>
+      <!-- Keyboard -->
+      <TresGroup :position="keyboardPosition" :rotation="keyboardRotation">
+        <PlacedModel
+          url="/models/room/keyboard.glb"
+          :height="DESK_HEIGHT / 9"
+        />
+      </TresGroup>
+      <!-- Mouse -->
+      <TresGroup :position="mousePosition" :rotation="mouseRotation">
+        <PlacedModel url="/models/room/mouse.glb" :height="DESK_HEIGHT / 15" />
+      </TresGroup>
+      <!-- Lamp -->
+      <TresGroup :position="lightDesk" :rotation="lampRotation">
+        <PlacedModel
+          url="/models/room/light_desk.glb"
+          :height="DESK_HEIGHT / 2"
+        />
+        <TresMesh :position="bulbPosition">
+          <TresPointLight
+            :color="BULB_COLOR"
+            :intensity="1"
+            :distance="0"
+            :decay="1"
+            cast-shadow
+          />
+        </TresMesh>
+      </TresGroup>
     </TresGroup>
   </TresGroup>
 </template>
