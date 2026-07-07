@@ -3,6 +3,7 @@ import { markRaw, ref, watch } from "vue";
 import { useGLTF } from "@tresjs/cientos";
 import { Box3, Vector3 } from "three";
 import type { Object3D } from "three";
+import { v3 } from "@/utils/math";
 
 // Loads a GLTF, normalizes its shadows/materials, scales it to the requested
 // height, and places it so its back-bottom-center sits at local (0, 0, 0).
@@ -11,19 +12,19 @@ const props = withDefaults(
   defineProps<{
     url: string;
     height: number;
-    position?: [number, number, number];
+    position?: Vector3;
     // Called for every child in the loaded scene, after the default mesh
     // normalization. Use it to tweak specific named meshes (e.g. make a bulb
     // emissive, attach a light).
     onChild?: (child: Object3D) => void;
   }>(),
-  { position: () => [0, 0, 0] },
+  { position: () => v3() },
 );
 
 const { state: model } = useGLTF(props.url);
 const scene = ref<any>();
 const scale = ref(1);
-const finalPosition = ref<[number, number, number]>([0, 0, 0]);
+const finalPosition = ref<Vector3>(v3());
 
 watch(
   model,
@@ -52,11 +53,11 @@ watch(
     const center = box.getCenter(new Vector3());
     scale.value = props.height / size.y;
 
-    finalPosition.value = [
-      -center.x * scale.value + props.position[0],
-      -box.min.y * scale.value + props.position[1],
-      -box.max.z * scale.value + props.position[2],
-    ];
+    finalPosition.value = v3(
+      -center.x * scale.value + props.position.x,
+      -box.min.y * scale.value + props.position.y,
+      -box.max.z * scale.value + props.position.z,
+    );
     scene.value = markRaw(loaded.scene);
   },
   { immediate: true },

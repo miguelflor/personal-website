@@ -3,12 +3,13 @@ import { markRaw, ref, watch } from "vue";
 import { useGLTF } from "@tresjs/cientos";
 import { Box3, Vector3 } from "three";
 import { FLOOR_SIZE } from "./room";
+import { v3 } from "@/utils/math";
 
 const { state: model } = useGLTF("/models/room/planks.glb");
 const plankScale = ref(1);
 const plankWidth = 0.5;
 const scenes = ref<any[]>([]);
-const positions = ref<[number, number, number][]>([]);
+const positions = ref<Vector3[]>([]);
 
 watch(model, (loaded) => {
   if (!loaded) {
@@ -30,7 +31,9 @@ watch(model, (loaded) => {
           child.castShadow = true;
         }
       });
-      positions.value.push([i + plankWidth / 2, -plankSize.y * plankScale.value, j + plankWidth / 2]);
+      positions.value.push(
+        v3(i + plankWidth / 2, -plankSize.y * plankScale.value, j + plankWidth / 2),
+      );
       scenes.value.push(markRaw(clone));
     }
   }
