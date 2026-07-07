@@ -7,7 +7,7 @@ const LIGHT_DESK = v3(0, 0, -0.5);
 
 const BULB_COLOR = "#ffd9a3";
 // Magic numbers, very difficult not to
-const BULB_POSITION = LIGHT_DESK.clone().add(v3(0, 0.19, -0.1));
+const BULB_POSITION = LIGHT_DESK.clone().add(v3(0, 0.19, -0.2));
 
 const GROUP_POSITION = v3(0, 0, WALL_INNER_OFFSET);
 const DESK_TOP = v3(0, DESK_HEIGHT, 0);
