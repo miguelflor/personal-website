@@ -21,6 +21,10 @@ const props = withDefaults(
   { position: () => v3() },
 );
 
+const emit = defineEmits<{
+  (e: "sized", size: Vector3): void;
+}>();
+
 const { state: model } = useGLTF(props.url);
 const scene = ref<any>();
 const scale = ref(1);
@@ -59,6 +63,7 @@ watch(
       -box.max.z * scale.value + props.position.z,
     );
     scene.value = markRaw(loaded.scene);
+    emit("sized", size.multiplyScalar(scale.value));
   },
   { immediate: true },
 );
