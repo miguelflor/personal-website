@@ -3,8 +3,8 @@ import { onMounted, ref } from "vue";
 import type { SpotLight } from "three";
 import Floor from "./Floor.vue";
 import SideWall from "./SideWall.vue";
-import Desk from "./Desk.vue";
 import { Side } from "../../types";
+import DeskScene from "./DeskScene.vue";
 import { WALL_INNER_OFFSET } from "./room";
 
 const light = ref<SpotLight>();
@@ -29,7 +29,7 @@ onMounted(() => {
     <SideWall :side="Side.Front" />
     <SideWall :side="Side.Left" />
     <SideWall :side="Side.Right" />
-    <Desk :height="0.5" />
+    <DeskScene />
   </TresGroup>
   <TresAmbientLight :intensity="0.3" />
   <TresAxesHelper />

@@ -2,7 +2,6 @@
 import { markRaw, ref, watch } from "vue";
 import { useGLTF } from "@tresjs/cientos";
 import { Box3, Vector3 } from "three";
-import { WALL_INNER_OFFSET } from "./room";
 
 const props = defineProps<{ height: number }>();
 
@@ -37,13 +36,12 @@ watch(
     const center = box.getCenter(new Vector3());
     deskScale.value = props.height / deskSize.y;
 
-    // Center in X, rest on the floor in Y, and push back until the desk's rear
-    // edge sits flush against the front wall's inner face in Z.
-    const backEdge = WALL_INNER_OFFSET - box.max.z * deskScale.value;
+    // Center in X, rest on the floor in Y, and place the desk's rear edge at
+    // local z = 0 (the parent group aligns that with the front wall).
     position.value = [
       -center.x * deskScale.value,
       -box.min.y * deskScale.value,
-      backEdge,
+      -box.max.z * deskScale.value,
     ];
     scene.value = markRaw(loaded.scene);
   },
