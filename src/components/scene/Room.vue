@@ -5,6 +5,7 @@ import Floor from "./Floor.vue";
 import SideWall from "./SideWall.vue";
 import Desk from "./Desk.vue";
 import { Side } from "../../types";
+import { WALL_INNER_OFFSET } from "./room";
 
 const light = ref<SpotLight>();
 
@@ -19,7 +20,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <TresPerspectiveCamera :position="[0, 2, -5]" :look-at="[0, 1, 0]" />
+  <TresPerspectiveCamera
+    :position="[0, 1, -1]"
+    :look-at="[0, 0.5, WALL_INNER_OFFSET]"
+  />
   <TresGroup>
     <Floor />
     <SideWall :side="Side.Front" />
@@ -31,8 +35,8 @@ onMounted(() => {
   <TresAxesHelper />
   <TresSpotLight
     ref="light"
-    :position="[0, 5, 0]"
-    :intensity="20"
+    :position="[0, 4, -1]"
+    :intensity="40"
     :angle="Math.PI / 3"
     :penumbra="0.5"
     :decay="2"
