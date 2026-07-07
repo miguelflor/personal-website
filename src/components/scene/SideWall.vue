@@ -29,7 +29,7 @@ const position: Vector3 = (() => {
   }
 })();
 
-const rotation = v3(0, rotates ? Math.PI / 2 : 0, 0);
+const rotation: [number, number, number] = [0, rotates ? Math.PI / 2 : 0, 0];
 
 const { textures } = useTextures([
   "/textures/wall/diff.jpg",
