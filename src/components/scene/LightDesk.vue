@@ -4,14 +4,19 @@ import PlacedModel from "./PlacedModel.vue";
 import { v3 } from "@/utils/math";
 import { DESK_HEIGHT } from "./room";
 import { ref } from "vue";
+
 defineProps<{
   position: Vector3;
   rotation: [number, number, number];
 }>();
 
+const switchSound = new Audio("/sounds/lightswitch.wav");
+
 const lightIntensity = ref(1);
 function toggleLight() {
   lightIntensity.value = lightIntensity.value === 1 ? 0 : 1;
+  switchSound.currentTime = 0;
+  switchSound.play();
 }
 
 function onPointerEnter() {
