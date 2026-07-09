@@ -2,6 +2,7 @@
 import { ref, watch } from "vue";
 import type { Vector3 } from "three";
 import PlacedModel from "./PlacedModel.vue";
+import LightDesk from "./LightDesk.vue";
 import { DESK_HEIGHT, WALL_INNER_OFFSET } from "./room";
 import { v3 } from "@/utils/math";
 import { ZAnchor } from "@/types";
@@ -10,11 +11,7 @@ const emit = defineEmits<{
   (e: "sized", size: Vector3): void;
 }>();
 
-const BULB_COLOR = "#ffd9a3";
-
 const groupPosition = v3(0, 0, WALL_INNER_OFFSET);
-// Magic numbers, very difficult not to
-const bulbPosition = v3(0, 0.19, -0.2);
 
 const monitorRotation: [number, number, number] = [0, Math.PI / 8, 0];
 const keyboardRotation: [number, number, number] = [0, Math.PI / 15, 0];
@@ -77,21 +74,7 @@ watch(deskSize, (loaded) => {
         <PlacedModel url="/models/room/mouse.glb" :height="DESK_HEIGHT / 15" />
       </TresGroup>
       <!-- Lamp -->
-      <TresGroup :position="lightDesk" :rotation="lampRotation">
-        <PlacedModel
-          url="/models/room/light_desk.glb"
-          :height="DESK_HEIGHT / 2"
-        />
-        <TresMesh :position="bulbPosition">
-          <TresPointLight
-            :color="BULB_COLOR"
-            :intensity="1"
-            :distance="0"
-            :decay="1"
-            cast-shadow
-          />
-        </TresMesh>
-      </TresGroup>
+      <LightDesk :position="lightDesk" :rotation="lampRotation" />
     </TresGroup>
   </TresGroup>
 </template>
