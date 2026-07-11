@@ -18,6 +18,7 @@
     "@tresjs/post-processing": "latest",
     "three": "latest",
     "three-stdlib": "latest",
+    "v86": "^0.5.424",
     "vue": "latest"
   },
   "devDependencies": {

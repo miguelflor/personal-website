@@ -3,6 +3,7 @@ import { ref, watch } from "vue";
 import type { Vector3 } from "three";
 import PlacedModel from "./PlacedModel.vue";
 import LightDesk from "./LightDesk.vue";
+import Monitor from "./Monitor.vue";
 import { DESK_HEIGHT, WALL_INNER_OFFSET } from "./room";
 import { v3 } from "@/utils/math";
 import { ZAnchor } from "@/types";
@@ -56,12 +57,7 @@ watch(deskSize, (loaded) => {
     />
     <TresGroup v-if="deskSize" :position="deskTop">
       <!-- Monitor -->
-      <TresGroup :position="monitorPosition" :rotation="monitorRotation">
-        <PlacedModel
-          url="/models/room/monitor.glb"
-          :height="DESK_HEIGHT / 1.7"
-        />
-      </TresGroup>
+      <Monitor :position="monitorPosition" :rotation="monitorRotation"/>
       <!-- Keyboard -->
       <TresGroup :position="keyboardPosition" :rotation="keyboardRotation">
         <PlacedModel
